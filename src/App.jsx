@@ -6,8 +6,8 @@ function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/crearEmpresa" element={<CrearEmpresa />} />
         <Route path="/" element={<Index />} />
-        <Route path="/CrearEmpresa" element={<CrearEmpresa />} />
       </Routes>
     </Router>
   );
