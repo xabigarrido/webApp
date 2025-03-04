@@ -71,17 +71,22 @@ export default function CrearEmpresa() {
     const handleMessage = (event) => {
       try {
         if (typeof event.data === "string") {
-          const coords = JSON.parse(event.data);
+          const coords = JSON.parse(event.data); // Parseamos el JSON
+
+          // Verificamos que las coordenadas lat y lng existen
           if (coords.lat && coords.lng) {
+            // Actualizamos la posición del marcador
             setMarker([coords.lat, coords.lng]);
+
+            // Actualizamos el estado de la empresa
             setDataEmpresa({
-              nameEmpresa: coords.nameEmpresa,
-              distancePick: coords.distancePick,
+              nameEmpresa: coords.nameEmpresa, // Nombre de la empresa
+              distancePick: Number(coords.distancePick), // Convertimos la distancia a número real
             });
           }
         }
       } catch (error) {
-        console.error("Error al recibir coordenadas desde Expo:", error);
+        console.error("Error al recibir coordenadas desde Expo:", error); // Manejamos errores de parsing
       }
     };
 
