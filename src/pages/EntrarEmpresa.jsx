@@ -78,10 +78,15 @@ export default function CrearEmpresa() {
             // Actualizamos la posición del marcador
             setMarker([coords.lat, coords.lng]);
 
+            // Aseguramos que 'distancePick' sea un número válido
+            const distancePick = !isNaN(Number(coords.distancePick))
+              ? Number(coords.distancePick) // Si es un número válido, lo usamos
+              : 500; // Si no, establecemos un valor por defecto (500)
+
             // Actualizamos el estado de la empresa
             setDataEmpresa({
               nameEmpresa: coords.nameEmpresa, // Nombre de la empresa
-              distancePick: Number(coords.distancePick), // Convertimos la distancia a número real
+              distancePick: distancePick, // Usamos el valor de distancia convertido
             });
           }
         }
