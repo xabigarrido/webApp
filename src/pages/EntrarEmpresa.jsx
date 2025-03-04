@@ -9,6 +9,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+
 function AutoPopupMarker({ position }) {
   const markerRef = useRef(null);
 
@@ -29,6 +30,7 @@ function AutoPopupMarker({ position }) {
     </Marker>
   );
 }
+
 const customIcon = new L.Icon({
   iconUrl: "/images/marker.png", // Ruta relativa a la carpeta 'public'
   iconSize: [50, 50], // Ajusta según el tamaño de tu imagen
@@ -36,16 +38,8 @@ const customIcon = new L.Icon({
   popupAnchor: [1, -34],
   shadowSize: [41, 41],
 });
-function ClickHandler({ onMapClick }) {
-  useMapEvents({
-    click(e) {
-      onMapClick(e); // Asegúrate de que el evento sea correctamente manejado
-    },
-  });
-  return null;
-}
 
-export default function CrearEmpresa() {
+function CrearEmpresa() {
   const [position, setPosition] = useState([37.7749, -122.4194]); // San Francisco inicial
   const [loading, setLoading] = useState(true);
   const [metrosRange, setMetrosRange] = useState(500);
@@ -54,6 +48,7 @@ export default function CrearEmpresa() {
     nameEmpresa: "",
     distancePick: 0,
   });
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -99,21 +94,8 @@ export default function CrearEmpresa() {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  const handleMapClick = (event) => {
-    const { lat, lng } = event.latlng;
-    setMarker([lat, lng]); // Guarda solo un marcador
-  };
-
-  const handleSendLocation = () => {
-    const miData = { ubicacionEmpresa: marker, metrosRange };
-
-    // Asegúrate de que window.ReactNativeWebView esté definido antes de intentar usarlo
-    if (typeof window !== "undefined" && window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage(JSON.stringify(miData));
-    } else {
-      console.error("ReactNativeWebView no está disponible.");
-    }
-  };
+  // Estado que verifica que todos los datos estén listos
+  const isReady = !loading && marker && dataEmpresa.nameEmpresa;
 
   return (
     <div
@@ -124,101 +106,10 @@ export default function CrearEmpresa() {
         flexDirection: "column",
       }}
     >
-      {loading ? (
-        <p>Cargando ubicación...</p>
+      {loading || !isReady ? (
+        <p>Cargando datos...</p>
       ) : (
         <>
-          {/* Contenedor superior con input y botón */}
-          {/* <div
-            style={{
-              width: "100%",
-              backgroundColor: "#ffffff",
-              padding: "20px 30px",
-              borderRadius: "15px",
-              textAlign: "center",
-              position: "fixed",
-              top: "20px",
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: 9999,
-              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-              maxWidth: "500px",
-              transition: "all 0.3s ease",
-            }}
-          >
-            <p
-              style={{
-                fontSize: "24px",
-                fontWeight: "600",
-                color: "#333",
-                marginBottom: "10px",
-              }}
-            >
-              Marca el lugar de tu empresa
-            </p>
-            <p
-              style={{
-                fontSize: "16px",
-                color: "#555",
-                marginBottom: "20px",
-                lineHeight: "1.5",
-              }}
-            >
-              Metros de distancia para poder acceder
-            </p>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "15px",
-                flexDirection: "column",
-              }}
-            >
-              <div style={{ width: "100%" }}>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  placeholder="500 metros"
-                  onChange={(event) =>
-                    setMetrosRange(Number(event.target.value))
-                  }
-                  style={{
-                    width: "100%",
-                    padding: "12px 18px",
-                    fontSize: "16px",
-                    borderRadius: "8px",
-                    border: "2px solid #ddd",
-                    outline: "none",
-                    boxSizing: "border-box",
-                    transition: "all 0.3s ease",
-                    marginBottom: "15px",
-                  }}
-                  onFocus={(e) => (e.target.style.border = "2px solid #007BFF")}
-                  onBlur={(e) => (e.target.style.border = "2px solid #ddd")}
-                />
-                <button
-                  onClick={handleSendLocation}
-                  style={{
-                    backgroundColor: "#007BFF",
-                    color: "#fff",
-                    padding: "12px 30px",
-                    borderRadius: "8px",
-                    border: "none",
-                    fontSize: "16px",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    width: "100%",
-                    fontWeight: "600",
-                  }}
-                >
-                  Agregar ubicación
-                </button>
-              </div>
-            </div>
-          </div> */}
-
-          {/* Contenedor del mapa que ocupa todo el espacio restante */}
           <div style={{ flexGrow: 1 }}>
             <MapContainer
               center={position}
@@ -244,7 +135,6 @@ export default function CrearEmpresa() {
                   />
                 </>
               )}
-              {/* <ClickHandler onMapClick={handleMapClick} /> */}
             </MapContainer>
           </div>
         </>
@@ -252,3 +142,5 @@ export default function CrearEmpresa() {
     </div>
   );
 }
+
+export default CrearEmpresa;
