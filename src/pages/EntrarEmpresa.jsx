@@ -76,7 +76,7 @@ export default function CrearEmpresa() {
             setMarker([coords.lat, coords.lng]);
             setDataEmpresa({
               nameEmpresa: coords.nameEmpresa,
-              distancePick: Number(coords.distancePick),
+              distancePick: coords.distancePick,
             });
           }
         }
