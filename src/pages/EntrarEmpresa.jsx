@@ -84,7 +84,6 @@ export default function CrearEmpresa() {
               : 500; // Si no, establecemos un valor por defecto (500)
 
             // Actualizamos el estado de la empresa
-            alert(coords.distancePick);
             setDataEmpresa({
               nameEmpresa: coords.nameEmpresa, // Nombre de la empresa
               distancePick: distancePick, // Usamos el valor de distancia convertido
