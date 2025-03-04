@@ -8,7 +8,7 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
+import L from "leaflet";
 function AutoPopupMarker({ position }) {
   const markerRef = useRef(null);
 
@@ -24,12 +24,18 @@ function AutoPopupMarker({ position }) {
   }, [markerRef]);
 
   return (
-    <Marker position={position} ref={markerRef}>
+    <Marker position={position} ref={markerRef} icon={customIcon}>
       <Popup>¡Estás aquí!</Popup>
     </Marker>
   );
 }
-
+const customIcon = new L.Icon({
+  iconUrl: "/images/marker.png", // Ruta relativa a la carpeta 'public'
+  iconSize: [50, 50], // Ajusta según el tamaño de tu imagen
+  iconAnchor: [20, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 function ClickHandler({ onMapClick }) {
   useMapEvents({
     click(e) {
@@ -140,7 +146,7 @@ export default function App() {
 
               {marker && (
                 <>
-                  <Marker position={marker}>
+                  <Marker position={marker} icon={customIcon}>
                     <Popup>Ubicación seleccionada</Popup>
                   </Marker>
                   <Circle
