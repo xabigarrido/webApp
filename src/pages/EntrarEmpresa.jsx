@@ -43,13 +43,14 @@ function CrearEmpresa() {
   const [position, setPosition] = useState([37.7749, -122.4194]); // San Francisco inicial
   const [loading, setLoading] = useState(true);
   const [metrosRange, setMetrosRange] = useState(500);
-  const [marker, setMarker] = useState([37.7749, -122.4194]); // San Francisco inicial
+  const [marker, setMarker] = useState(null); // Inicializar como null
   const [dataEmpresa, setDataEmpresa] = useState({
     nameEmpresa: "",
     distancePick: 0,
   });
 
   useEffect(() => {
+    // Primero, obtenemos la ubicación del usuario
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const userLocation = [pos.coords.latitude, pos.coords.longitude];
@@ -63,6 +64,7 @@ function CrearEmpresa() {
       }
     );
 
+    // Luego, escuchamos los mensajes desde Expo
     const handleMessage = (event) => {
       try {
         if (typeof event.data === "string") {
@@ -80,7 +82,7 @@ function CrearEmpresa() {
 
             // Actualizamos el estado de la empresa
             setDataEmpresa({
-              nameEmpresa: coords.nameEmpresa, // Nombre de la empresa
+              nameEmpresa: coords.nameEmpresa || "Sin nombre", // Verifica si hay nombre
               distancePick: distancePick, // Usamos el valor de distancia convertido
             });
           }
@@ -94,8 +96,8 @@ function CrearEmpresa() {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  // Estado que verifica que todos los datos estén listos
-  const isReady = !loading && marker && dataEmpresa.nameEmpresa;
+  // Estado que verifica si todo está listo para renderizar
+  const isReady = !loading && marker !== null && dataEmpresa.nameEmpresa;
 
   return (
     <div
@@ -106,7 +108,7 @@ function CrearEmpresa() {
         flexDirection: "column",
       }}
     >
-      {loading || !isReady ? (
+      {!isReady ? (
         <p>Cargando datos...</p>
       ) : (
         <>
