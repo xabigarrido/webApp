@@ -50,7 +50,10 @@ export default function CrearEmpresa() {
   const [loading, setLoading] = useState(true);
   const [metrosRange, setMetrosRange] = useState(500);
   const [marker, setMarker] = useState([37.7749, -122.4194]); // San Francisco inicial
-
+  const [dataEmpresa, setDataEmpresa] = useState({
+    nameEmpresa: "",
+    distancePick: 0,
+  });
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -71,6 +74,10 @@ export default function CrearEmpresa() {
           const coords = JSON.parse(event.data);
           if (coords.lat && coords.lng) {
             setMarker([coords.lat, coords.lng]);
+            setDataEmpresa({
+              nameEmpresa: coords.nameEmpresa,
+              distancePick: coords.distancePick,
+            });
           }
         }
       } catch (error) {
@@ -214,11 +221,11 @@ export default function CrearEmpresa() {
               {marker && (
                 <>
                   <Marker position={marker} icon={customIcon}>
-                    <Popup>Ubicación seleccionada</Popup>
+                    <Popup>{dataEmpresa.nameEmpresa}</Popup>
                   </Marker>
                   <Circle
                     center={marker}
-                    radius={metrosRange}
+                    radius={dataEmpresa.distancePick}
                     pathOptions={{
                       color: "blue",
                       fillColor: "blue",
