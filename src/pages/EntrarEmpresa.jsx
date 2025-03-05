@@ -43,7 +43,7 @@ export default function CrearEmpresa() {
     setDataEmpresa({
       nameEmpresa: window.nameEmpresa,
       distancePick: window.distancePick,
-      trabajando: window.trabajando,
+      trabajando: window.trabajando === "true",
     });
     setMarker([window.latEmpresa, window.longEmpresa]);
   }, []);
