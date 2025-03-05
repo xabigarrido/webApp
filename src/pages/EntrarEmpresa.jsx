@@ -147,12 +147,30 @@ export default function CrearEmpresa() {
           style={{
             display: "flex",
             justifyContent: "center",
+            flexDirection: "column",
             alignItems: "center",
             backgroundColor: "#6d6d6d",
             flex: 1, // Asegura que el contenedor ocupe todo el espacio disponible
           }}
         >
           <LoadingMessage />
+          <button
+            onClick={handleCancel}
+            style={{
+              backgroundColor: "#ff0000",
+              color: "#fff",
+              padding: "12px 30px",
+              borderRadius: "8px",
+              border: "none",
+              fontSize: "16px",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+              width: "40%",
+              fontWeight: "600",
+            }}
+          >
+            Cancelar
+          </button>
         </div>
       ) : (
         <>
