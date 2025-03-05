@@ -34,18 +34,25 @@ export default function CrearEmpresa() {
   const [position, setPosition] = useState([37.7749, -122.4194]); // San Francisco inicial
   const [loading, setLoading] = useState(true);
   const [marker, setMarker] = useState([37.7749, -122.4194]); // San Francisco inicial
-  const [visible, setVisible] = useState(false);
   const [dataEmpresa, setDataEmpresa] = useState({
-    nameEmpresa: "",
+    nameEmpresa: "dewdew",
     distancePick: 0,
     trabajando: false,
   });
+  useEffect(() => {
+    setDataEmpresa({
+      nameEmpresa: window.nameEmpresa,
+      distancePick: window.distancePick,
+      trabajando: Number(window.trabajando),
+    });
+    setMarker([window.latEmpresa, window.longEmpresa]);
+  }, []);
+
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const userLocation = [pos.coords.latitude, pos.coords.longitude];
         setPosition(userLocation);
-        setMarker(userLocation); // Aseguramos que el marcador también tenga la ubicación inicial
         setLoading(false);
       },
       () => {
