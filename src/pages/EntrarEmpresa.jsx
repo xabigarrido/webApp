@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import LoadingMessage from "./LoadingMessage";
 function AutoPopupMarker({ position }) {
   const markerRef = useRef(null);
 
@@ -142,7 +143,9 @@ export default function CrearEmpresa() {
       }}
     >
       {loading ? (
-        <p>Cargando ubicación...</p>
+        <div>
+          <LoadingMessage />
+        </div>
       ) : (
         <>
           <div
