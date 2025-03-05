@@ -8,11 +8,13 @@ body {
   align-items: center;
   background-color: #f0f0f0;
   font-family: "Arial", sans-serif;
+  display: flex; /* Añadido */
+  flex-direction: column; /* Añadido */
 }
 
 .loading-message {
   padding: 20px;
-  background-color: #4caf50;
+  background-color: #333333;
   color: white;
   font-size: 20px;
   border-radius: 8px;

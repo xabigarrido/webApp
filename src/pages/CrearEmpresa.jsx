@@ -9,6 +9,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import LoadingMessage from "./LoadingMessage";
 function AutoPopupMarker({ position }) {
   const markerRef = useRef(null);
 
@@ -92,7 +93,17 @@ export default function CrearEmpresa() {
       }}
     >
       {loading ? (
-        <p>Cargando ubicación...</p>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#6d6d6d",
+            flex: 1, // Asegura que el contenedor ocupe todo el espacio disponible
+          }}
+        >
+          <LoadingMessage />
+        </div>
       ) : (
         <>
           {/* Contenedor superior con input y botón */}

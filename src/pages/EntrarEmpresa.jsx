@@ -143,7 +143,15 @@ export default function CrearEmpresa() {
       }}
     >
       {loading ? (
-        <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#6d6d6d",
+            flex: 1, // Asegura que el contenedor ocupe todo el espacio disponible
+          }}
+        >
           <LoadingMessage />
         </div>
       ) : (
