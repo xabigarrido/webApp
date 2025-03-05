@@ -90,11 +90,9 @@ export default function CrearEmpresa() {
     if (isAndroid) {
       // En Android se utiliza 'document'
       document.addEventListener("message", handleMessage);
-    } else if (isIOS) {
+    }
+    if (isIOS) {
       // En iOS se utiliza 'window'
-      window.addEventListener("message", handleMessage);
-    } else {
-      // Por defecto, si no se detecta, usamos window
       window.addEventListener("message", handleMessage);
     }
 
