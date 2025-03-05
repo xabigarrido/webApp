@@ -194,9 +194,7 @@ export default function CrearEmpresa() {
                     fontWeight: "600",
                   }}
                 >
-                  {dataEmpresa.trabajando === "true"
-                    ? "Iniciar turno"
-                    : "Cerrar turno"}
+                  {!dataEmpresa.trabajando ? "Iniciar turno" : "Cerrar turno"}
                 </button>
                 <button
                   onClick={handleCancel}
