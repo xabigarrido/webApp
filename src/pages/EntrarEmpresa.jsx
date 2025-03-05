@@ -81,7 +81,6 @@ export default function CrearEmpresa() {
         console.error("Error al recibir coordenadas desde Expo:", error); // Manejamos errores de parsing
       }
     };
-    setVisible(true);
 
     // Detectamos el sistema operativo a partir del user agent
     const isIOS =
