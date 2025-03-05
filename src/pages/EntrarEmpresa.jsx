@@ -1,15 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Circle,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Circle } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-
 function AutoPopupMarker({ position }) {
   const markerRef = useRef(null);
 
@@ -30,7 +22,6 @@ function AutoPopupMarker({ position }) {
     </Marker>
   );
 }
-
 const customIcon = new L.Icon({
   iconUrl: "/images/marker.png", // Ruta relativa a la carpeta 'public'
   iconSize: [50, 50], // Ajusta según el tamaño de tu imagen
@@ -39,18 +30,17 @@ const customIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
-function CrearEmpresa() {
+export default function CrearEmpresa() {
   const [position, setPosition] = useState([37.7749, -122.4194]); // San Francisco inicial
   const [loading, setLoading] = useState(true);
-  const [metrosRange, setMetrosRange] = useState(500);
-  const [marker, setMarker] = useState(null); // Inicializar como null
+  const [marker, setMarker] = useState([37.7749, -122.4194]); // San Francisco inicial
+  const [visible, setVisible] = useState(false);
   const [dataEmpresa, setDataEmpresa] = useState({
     nameEmpresa: "",
     distancePick: 0,
+    trabajando: false,
   });
-
   useEffect(() => {
-    // Primero, obtenemos la ubicación del usuario
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const userLocation = [pos.coords.latitude, pos.coords.longitude];
@@ -64,7 +54,6 @@ function CrearEmpresa() {
       }
     );
 
-    // Luego, escuchamos los mensajes desde Expo
     const handleMessage = (event) => {
       try {
         if (typeof event.data === "string") {
@@ -82,8 +71,9 @@ function CrearEmpresa() {
 
             // Actualizamos el estado de la empresa
             setDataEmpresa({
-              nameEmpresa: coords.nameEmpresa || "Sin nombre", // Verifica si hay nombre
+              nameEmpresa: coords.nameEmpresa, // Nombre de la empresa
               distancePick: distancePick, // Usamos el valor de distancia convertido
+              trabajando: coords.trabajando,
             });
           }
         }
@@ -91,14 +81,53 @@ function CrearEmpresa() {
         console.error("Error al recibir coordenadas desde Expo:", error); // Manejamos errores de parsing
       }
     };
+    setVisible(true);
 
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
+    // Detectamos el sistema operativo a partir del user agent
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    const isAndroid = /Android/.test(navigator.userAgent);
+
+    if (isAndroid) {
+      // En Android se utiliza 'document'
+      document.addEventListener("message", handleMessage);
+    } else if (isIOS) {
+      // En iOS se utiliza 'window'
+      window.addEventListener("message", handleMessage);
+    } else {
+      // Por defecto, si no se detecta, usamos window
+      window.addEventListener("message", handleMessage);
+    }
+
+    return () => {
+      if (isAndroid) {
+        document.removeEventListener("message", handleMessage);
+      } else {
+        window.removeEventListener("message", handleMessage);
+      }
+    };
   }, []);
 
-  // Estado que verifica si todo está listo para renderizar
-  const isReady = !loading && marker !== null && dataEmpresa.nameEmpresa;
+  const handleSendLocation = () => {
+    const miData = { action: "confirm", ubicacionEmpleado: position };
 
+    // Asegúrate de que window.ReactNativeWebView esté definido antes de intentar usarlo
+    if (typeof window !== "undefined" && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify(miData));
+    } else {
+      console.error("ReactNativeWebView no está disponible.");
+    }
+  };
+  const handleCancel = () => {
+    const miData = { action: "cancel", ubicacionEmpleado: position };
+
+    // Asegúrate de que window.ReactNativeWebView esté definido antes de intentar usarlo
+    if (typeof window !== "undefined" && window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage(JSON.stringify(miData));
+    } else {
+      console.error("ReactNativeWebView no está disponible.");
+    }
+  };
   return (
     <div
       style={{
@@ -108,10 +137,81 @@ function CrearEmpresa() {
         flexDirection: "column",
       }}
     >
-      {!isReady ? (
-        <p>Cargando datos...</p>
+      {loading ? (
+        <p>Cargando ubicación...</p>
       ) : (
         <>
+          <div
+            style={{
+              width: "100%",
+              backgroundColor: "#ffffff",
+              padding: "20px 30px",
+              borderRadius: "15px",
+              textAlign: "center",
+              position: "fixed",
+              bottom: "80px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 9999,
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+              maxWidth: "500px",
+              transition: "all 0.3s ease",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "15px",
+                flexDirection: "column",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  gap: 10,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <button
+                  onClick={handleSendLocation}
+                  style={{
+                    backgroundColor: "#007BFF",
+                    color: "#fff",
+                    padding: "12px 30px",
+                    borderRadius: "8px",
+                    border: "none",
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    width: "40%",
+                    fontWeight: "600",
+                  }}
+                >
+                  {!dataEmpresa.trabajando ? "Iniciar turno" : "Cerrar turno"}
+                </button>
+                <button
+                  onClick={handleCancel}
+                  style={{
+                    backgroundColor: "#ff0000",
+                    color: "#fff",
+                    padding: "12px 30px",
+                    borderRadius: "8px",
+                    border: "none",
+                    fontSize: "16px",
+                    cursor: "pointer",
+                    transition: "all 0.3s ease",
+                    width: "40%",
+                    fontWeight: "600",
+                  }}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
           <div style={{ flexGrow: 1 }}>
             <MapContainer
               center={position}
@@ -144,5 +244,3 @@ function CrearEmpresa() {
     </div>
   );
 }
-
-export default CrearEmpresa;

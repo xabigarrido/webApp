@@ -99,7 +99,6 @@ export default function CrearEmpresa() {
           <div
             style={{
               width: "100%",
-              backgroundColor: "#ffffff",
               padding: "20px 30px",
               borderRadius: "15px",
               textAlign: "center",
@@ -111,6 +110,8 @@ export default function CrearEmpresa() {
               boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
               maxWidth: "500px",
               transition: "all 0.3s ease",
+              backgroundColor: "white",
+              color: "black",
             }}
           >
             <p
@@ -151,7 +152,7 @@ export default function CrearEmpresa() {
                     setMetrosRange(Number(event.target.value))
                   }
                   style={{
-                    width: "100%",
+                    width: "90%",
                     padding: "12px 18px",
                     fontSize: "16px",
                     borderRadius: "8px",
@@ -160,6 +161,8 @@ export default function CrearEmpresa() {
                     boxSizing: "border-box",
                     transition: "all 0.3s ease",
                     marginBottom: "15px",
+                    backgroundColor: "white",
+                    color: "black",
                   }}
                   onFocus={(e) => (e.target.style.border = "2px solid #007BFF")}
                   onBlur={(e) => (e.target.style.border = "2px solid #ddd")}
@@ -175,7 +178,7 @@ export default function CrearEmpresa() {
                     fontSize: "16px",
                     cursor: "pointer",
                     transition: "all 0.3s ease",
-                    width: "100%",
+                    width: "90%",
                     fontWeight: "600",
                   }}
                 >
