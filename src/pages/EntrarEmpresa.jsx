@@ -37,7 +37,7 @@ export default function CrearEmpresa() {
   const [dataEmpresa, setDataEmpresa] = useState({
     nameEmpresa: "dewdew",
     distancePick: 0,
-    trabajando: "false",
+    trabajando: "",
   });
   useEffect(() => {
     setDataEmpresa({
