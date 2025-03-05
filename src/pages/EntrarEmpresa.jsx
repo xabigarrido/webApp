@@ -37,7 +37,7 @@ export default function CrearEmpresa() {
   const [dataEmpresa, setDataEmpresa] = useState({
     nameEmpresa: "dewdew",
     distancePick: 0,
-    trabajando: false,
+    trabajando: "false",
   });
   useEffect(() => {
     setDataEmpresa({
@@ -194,7 +194,9 @@ export default function CrearEmpresa() {
                     fontWeight: "600",
                   }}
                 >
-                  {!dataEmpresa.trabajando ? "Iniciar turno" : "Cerrar turno"}
+                  {dataEmpresa.trabajando === "true"
+                    ? "Iniciar turno"
+                    : "Cerrar turno"}
                 </button>
                 <button
                   onClick={handleCancel}
